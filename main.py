@@ -28,14 +28,14 @@ def initialize():
 
 def create_listing(name, descr, price, category):
     sql = "INSERT INTO product_listing (name, description, price, category) VALUES (%s, %s, %s, %s)"
-    vals = (name, descr, price, category, )
+    vals = (name, descr, price, category)
     dbcursor.execute(sql, vals)
     database.commit()
 
 def remove_listing(name):
-    sql = "DELETE FROM product_listing WHERE name = %s"
-    val = (name, )
-    dbcursor.execute(sql, val)
+    # Changed to delete product based off of id instead of name.
+    sql = "DELETE FROM product_listing WHERE id = %s"
+    dbcursor.execute(sql, (id))
     database.commit()
 
 def edit_listing(id, new_name, new_descr, new_price, new_category):
