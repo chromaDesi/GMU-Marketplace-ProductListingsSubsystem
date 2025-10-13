@@ -1,5 +1,4 @@
 import product
-import stat
 import mysql.connector
 
 # Connect to MySQL database
