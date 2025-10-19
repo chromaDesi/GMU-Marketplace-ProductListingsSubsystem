@@ -1,0 +1,420 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Product Listing Manager</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            padding: 20px;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        h1 {
+            color: white;
+            text-align: center;
+            margin-bottom: 30px;
+            font-size: 2.5em;
+            text-shadow: 2px 2px 4px rgba(0,0,0,0.2);
+        }
+
+        .content-wrapper {
+            display: grid;
+            grid-template-columns: 1fr 2fr;
+            gap: 20px;
+            margin-bottom: 20px;
+        }
+
+        .form-card, .list-card {
+            background: white;
+            border-radius: 15px;
+            padding: 25px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.2);
+        }
+
+        .form-card h2, .list-card h2 {
+            color: #667eea;
+            margin-bottom: 20px;
+            font-size: 1.5em;
+        }
+
+        .form-group {
+            margin-bottom: 15px;
+        }
+
+        label {
+            display: block;
+            margin-bottom: 5px;
+            color: #333;
+            font-weight: 500;
+        }
+
+        input, textarea, select {
+            width: 100%;
+            padding: 10px;
+            border: 2px solid #e0e0e0;
+            border-radius: 8px;
+            font-size: 14px;
+            transition: border-color 0.3s;
+        }
+
+        input:focus, textarea:focus, select:focus {
+            outline: none;
+            border-color: #667eea;
+        }
+
+        textarea {
+            resize: vertical;
+            min-height: 80px;
+        }
+
+        button {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            border: none;
+            padding: 12px 24px;
+            border-radius: 8px;
+            font-size: 16px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: transform 0.2s, box-shadow 0.2s;
+            width: 100%;
+        }
+
+        button:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(102, 126, 234, 0.4);
+        }
+
+        button:active {
+            transform: translateY(0);
+        }
+
+        .product-list {
+            display: grid;
+            gap: 15px;
+        }
+
+        .product-item {
+            background: #f8f9fa;
+            border-radius: 10px;
+            padding: 15px;
+            border-left: 4px solid #667eea;
+            transition: transform 0.2s;
+        }
+
+        .product-item:hover {
+            transform: translateX(5px);
+            box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+        }
+
+        .product-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: start;
+            margin-bottom: 10px;
+        }
+
+        .product-title {
+            font-size: 1.2em;
+            font-weight: 600;
+            color: #333;
+        }
+
+        .product-id {
+            background: #667eea;
+            color: white;
+            padding: 3px 10px;
+            border-radius: 12px;
+            font-size: 0.85em;
+        }
+
+        .product-details {
+            color: #666;
+            margin-bottom: 10px;
+        }
+
+        .product-price {
+            font-size: 1.3em;
+            font-weight: 700;
+            color: #764ba2;
+            margin: 10px 0;
+        }
+
+        .product-category {
+            display: inline-block;
+            background: #e0e7ff;
+            color: #667eea;
+            padding: 4px 12px;
+            border-radius: 15px;
+            font-size: 0.9em;
+            margin-bottom: 10px;
+        }
+
+        .product-actions {
+            display: flex;
+            gap: 10px;
+            margin-top: 10px;
+        }
+
+        .btn-edit, .btn-delete {
+            flex: 1;
+            padding: 8px;
+            border-radius: 6px;
+            border: none;
+            cursor: pointer;
+            font-weight: 600;
+            transition: all 0.2s;
+        }
+
+        .btn-edit {
+            background: #4ade80;
+            color: white;
+        }
+
+        .btn-edit:hover {
+            background: #22c55e;
+        }
+
+        .btn-delete {
+            background: #f87171;
+            color: white;
+        }
+
+        .btn-delete:hover {
+            background: #ef4444;
+        }
+
+        .empty-state {
+            text-align: center;
+            padding: 40px;
+            color: #999;
+        }
+
+        .empty-state i {
+            font-size: 3em;
+            margin-bottom: 10px;
+        }
+
+        @media (max-width: 768px) {
+            .content-wrapper {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>📦 Product Listing Manager</h1>
+        
+        <div class="content-wrapper">
+            <div class="form-card">
+                <h2 id="formTitle">Add New Product</h2>
+                <form id="productForm">
+                    <input type="hidden" id="editId">
+                    
+                    <div class="form-group">
+                        <label for="productName">Product Name</label>
+                        <input type="text" id="productName" required>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="productDesc">Description</label>
+                        <textarea id="productDesc" required></textarea>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="productPrice">Price ($)</label>
+                        <input type="number" id="productPrice" step="0.01" min="0.01" required>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="productCategory">Category</label>
+                        <input type="text" id="productCategory" required>
+                    </div>
+                    
+                    <button type="submit" id="submitBtn">Add Product</button>
+                </form>
+            </div>
+            
+            <div class="list-card">
+                <h2>Product List</h2>
+                <div id="productList" class="product-list"></div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        class Product {
+            static nextId = 1;
+            
+            constructor(name, description, price, category, id = null) {
+                this.name = name;
+                this.description = description;
+                this.price = parseFloat(price);
+                this.category = category;
+                this.productId = id || Product.nextId++;
+                this.validate();
+            }
+            
+            validate() {
+                if (!this.name) throw new Error("Product name is required");
+                if (!this.description) throw new Error("Description is required");
+                if (this.price <= 0) throw new Error("Price must be greater than 0");
+                if (!this.category) throw new Error("Category is required");
+            }
+            
+            toDict() {
+                return {
+                    productId: this.productId,
+                    name: this.name,
+                    description: this.description,
+                    price: this.price,
+                    category: this.category
+                };
+            }
+        }
+
+        let database = [];
+        let editingId = null;
+
+        function addProduct(product) {
+            database.push(product);
+            saveToStorage();
+            renderProducts();
+        }
+
+        function removeProduct(id) {
+            database = database.filter(p => p.productId !== id);
+            saveToStorage();
+            renderProducts();
+        }
+
+        function updateProduct(id, name, description, price, category) {
+            const product = database.find(p => p.productId === id);
+            if (product) {
+                product.name = name;
+                product.description = description;
+                product.price = parseFloat(price);
+                product.category = category;
+                saveToStorage();
+                renderProducts();
+            }
+        }
+
+        function saveToStorage() {
+            const data = database.map(p => p.toDict());
+            localStorage.setItem('products', JSON.stringify(data));
+            localStorage.setItem('nextId', Product.nextId.toString());
+        }
+
+        function loadFromStorage() {
+            const saved = localStorage.getItem('products');
+            const savedNextId = localStorage.getItem('nextId');
+            
+            if (savedNextId) {
+                Product.nextId = parseInt(savedNextId);
+            }
+            
+            if (saved) {
+                const products = JSON.parse(saved);
+                database = products.map(p => 
+                    new Product(p.name, p.description, p.price, p.category, p.productId)
+                );
+                renderProducts();
+            }
+        }
+
+        function renderProducts() {
+            const list = document.getElementById('productList');
+            
+            if (database.length === 0) {
+                list.innerHTML = `
+                    <div class="empty-state">
+                        <div style="font-size: 3em;">📭</div>
+                        <p>No products yet. Add your first product!</p>
+                    </div>
+                `;
+                return;
+            }
+            
+            list.innerHTML = database.map(product => `
+                <div class="product-item">
+                    <div class="product-header">
+                        <div class="product-title">${product.name}</div>
+                        <div class="product-id">#${product.productId}</div>
+                    </div>
+                    <div class="product-category">${product.category}</div>
+                    <div class="product-details">${product.description}</div>
+                    <div class="product-price">$${product.price.toFixed(2)}</div>
+                    <div class="product-actions">
+                        <button class="btn-edit" onclick="editProduct(${product.productId})">Edit</button>
+                        <button class="btn-delete" onclick="deleteProduct(${product.productId})">Delete</button>
+                    </div>
+                </div>
+            `).join('');
+        }
+
+        function editProduct(id) {
+            const product = database.find(p => p.productId === id);
+            if (product) {
+                editingId = id;
+                document.getElementById('editId').value = id;
+                document.getElementById('productName').value = product.name;
+                document.getElementById('productDesc').value = product.description;
+                document.getElementById('productPrice').value = product.price;
+                document.getElementById('productCategory').value = product.category;
+                document.getElementById('formTitle').textContent = 'Edit Product';
+                document.getElementById('submitBtn').textContent = 'Update Product';
+            }
+        }
+
+        function deleteProduct(id) {
+            if (confirm('Are you sure you want to delete this product?')) {
+                removeProduct(id);
+            }
+        }
+
+        document.getElementById('productForm').addEventListener('submit', function(e) {
+            e.preventDefault();
+            
+            const name = document.getElementById('productName').value;
+            const desc = document.getElementById('productDesc').value;
+            const price = document.getElementById('productPrice').value;
+            const category = document.getElementById('productCategory').value;
+            
+            try {
+                if (editingId) {
+                    updateProduct(editingId, name, desc, price, category);
+                    editingId = null;
+                } else {
+                    const product = new Product(name, desc, price, category);
+                    addProduct(product);
+                }
+                
+                this.reset();
+                document.getElementById('formTitle').textContent = 'Add New Product';
+                document.getElementById('submitBtn').textContent = 'Add Product';
+            } catch (error) {
+                alert(error.message);
+            }
+        });
+
+        loadFromStorage();
+    </script>
+</body>
+</html>
