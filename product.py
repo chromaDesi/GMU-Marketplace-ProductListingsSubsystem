@@ -1,6 +1,8 @@
 """
 Simple Product creator - No MySQL needed
 """
+import uuid
+
 
 class Product:
     """Simple Product class"""
@@ -30,6 +32,10 @@ class Product:
         Product._next_id += 1
         # Return the ID for this product
         return current_id
+
+    #experiemental id generation, in hopes to make it more unique and less predictable
+    def gen_id(self) -> str:
+        return str(uuid.uuid4())
     
     def validate(self):
         """Check if product data is valid"""
