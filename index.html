@@ -589,8 +589,8 @@
 
                 // If creating OR if user picked a new file while editing, read it.
                 if (file) {
-                    if (file.size > 1_500_000) {
-                        throw new Error("Image too large (keep under ~1.5MB for this demo).");
+                    if (file.size > 1_000_000) {
+                        throw new Error("Image too large (keep under ~1.0MB for this demo).");
                     }
                     imageData = await readFileAsDataURL(file);
                 }
