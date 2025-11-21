@@ -32,7 +32,7 @@ def initialize():
     for x in dbcursor:
         # If the product_lising table already exists, stop here
         if x[0] == 'product_listing':
-            return
+            break
         # If the product_listing table does not exist, create it with these valid data: id, name, description, price, and category
         else:
             dbcursor.execute(""" 
@@ -43,8 +43,54 @@ def initialize():
                             price DOUBLE NOT NULL,
                             category VARCHAR(100) NOT NULL)
                             """)
+            database.commit()
+    for x in dbcursor:
+        # If the catagories table already exists, stop here
+        if x[0] == 'catagories':
+            return
+        # If the catagories table does not exist, create it and populate it
+        else:
+            dbcursor.execute(""" 
+                            CREATE TABLE catagories (
+                            id INT AUTO_INCREMENT PRIMARY KEY,
+                            name VARCHAR(100) NOT NULL UNIQUE)
+                            """)
+            sql = """INSERT INTO catagories (name) VALUES
+            ('Furniture'),
+            ('Automotive'),
+            ('Health'),
+            ('Entertainment'),
+            ('Office Supplies'),
+            ('Electronics'),
+            ('Fashion'),
+            ('Sports'),
+            ('Home Improvement'),
+            (Miscellanious)
+            """
+            dbcursor.execute(sql)
+            database.commit()
 
-def create_listing(name, descr, price, category):
+def create_catagory(name: str) -> bool:
+    try:
+        sql = "INSERT INTO catagories (name) VALUES (%s)"
+        dbcursor.execute(sql, (name,))
+        database.commit()
+        return True
+    except:
+        print("Error creating catagory, process failed")
+        return False
+
+def getCatagoryName(cid:int) -> str:
+    try:
+        sql = "SELECT name FROM catagories WHERE id = %s"
+        dbcursor.execute(sql,(cid,))
+        r = dbcursor.fetchone()
+        return r[0] if r else None
+    except:
+        print("Error on name retrival")
+        return None
+
+def create_listing(name: str, descr: str, price: float, category: int):
     """
     Create a product listing to go in the product_listing database table.
     Includes the product's name, description, price, and category.
