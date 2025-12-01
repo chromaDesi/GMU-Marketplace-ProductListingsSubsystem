@@ -11,12 +11,13 @@ class Product:
     # It keeps track of the "next available product ID".
     _next_id = 1
     
-    def __init__(self, name, description, price, category):
+    def __init__(self, name, description, price, category, image_data):
         # Store product details as attributes
         self.name = name
         self.description = description
         self.price = price
         self.category = category
+        self.image_data = image_data
         
         # Call generate_id() to assign an auto-incremented product_id
         self.product_id = self.generate_id()
@@ -54,6 +55,10 @@ class Product:
         # Category must be given
         if not self.category:
             raise ValueError("Category is required")
+
+        # Image is required
+        if not self.image_data:
+            raise ValueError("Image is required")
     
     def to_dict(self):
         """Convert to dictionary"""
@@ -63,7 +68,8 @@ class Product:
             'name': self.name,
             'description': self.description,
             'price': self.price,
-            'category': self.category
+            'category': self.category,
+            'image_data': self.image_data
         }
     
     def __str__(self):
@@ -82,6 +88,7 @@ if __name__ == "__main__":
         description="Software Engineering book for class",
         price=75.5,
         category="textbooks"
+        image_data="textbook.png"
     )
     
     # Print a message just to show test started
