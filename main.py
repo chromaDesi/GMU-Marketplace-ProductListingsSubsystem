@@ -72,22 +72,20 @@ def initialize():
 
 def create_catagory(name: str) -> bool:
     try:
-        sql = "INSERT INTO catagories (name) VALUES (%s)"
-        dbcursor.execute(sql, (name,))
+        dbcursor.execute("INSERT INTO catagories (name) VALUES (%s)", (name,))
         database.commit()
         return True
     except:
-        print("Error creating catagory, process failed")
+        print("Creation error")
         return False
 
-def getCatagoryName(cid:int) -> str:
+def getCatagoryName(cid: int) -> str:
     try:
-        sql = "SELECT name FROM catagories WHERE id = %s"
-        dbcursor.execute(sql,(cid,))
+        dbcursor.execute("SELECT name FROM catagories WHERE id = %s",(cid,))
         r = dbcursor.fetchone()
         return r[0] if r else None
     except:
-        print("Error on name retrival")
+        print("Error 404: Catagory not found")
         return None
 
 def create_listing(name: str, descr: str, price: float, category: int):
